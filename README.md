@@ -1,44 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Catálogo de Animes
 
-## Getting Started
+Este projeto é um catálogo de animes que permite explorar uma variedade de filmes e seus detalhes. Foi desenvolvido como parte de um teste e possui recursos como paginação e uma barra de pesquisa para melhorar a usabilidade.
 
-First, install all dependencies to run the project:
+### Como rodar o projeto
 
-```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
-```
+Para executar o projeto localmente, siga as instruções abaixo:
 
-Then, run the development server:
+1. Certifique-se de ter o Node.js instalado em sua máquina. Você pode baixá-lo em https://nodejs.org.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+2. Faça o download ou clone o repositório do projeto.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Abra o terminal ou prompt de comando e navegue até o diretório raiz do projeto.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Execute o comando `npm install` para instalar as dependências do projeto.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+5. Após a conclusão da instalação, execute o comando `npm start` para iniciar o servidor de desenvolvimento.
 
-## Learn More
+6. O projeto será executado localmente e estará disponível no seu navegador através do endereço http://localhost:3000.
 
-To learn more about Next.js, take a look at the following resources:
+### Demo online
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Você também pode visualizar a aplicação online através do seguinte link: [Catálogo de Animes](https://anime-flix-ten.vercel.app/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Tecnologias utilizadas
 
-## Deploy on Vercel
+- React.js
+- NextJs v13
+- Less
+- Ant Design
+- Axios
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Recursos adicionais
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Além das funcionalidades básicas do catálogo de animes, foram implementados recursos extras como paginação e barra de pesquisa para aprimorar a experiência do usuário.
+
+Espero que aproveite a experiência! Caso tenha alguma dúvida ou precise de ajuda, estou à disposição.
