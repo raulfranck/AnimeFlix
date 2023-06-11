@@ -1,95 +1,126 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client'
+import { useEffect, useState } from "react";
+import { CustomCard } from "./Components/CustomCard";
+import axios from "axios";
+import { Input, Pagination, Spin } from "antd";
+
 
 export default function Home() {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [searchMovies, setSearchMovies] = useState<Movie[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalMovies, setTotalMovies] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  interface Movie {
+    id: string;
+    attributes: {
+      titles: {
+        en_jp: string;
+      };
+      posterImage: {
+        medium: string;
+      };
+      synopsis: string;
+    };
+  }
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `https://kitsu.io/api/edge/anime?page[limit]=10&page[offset]=${(currentPage - 1) * 10}`
+        );
+        setMovies(response.data.data);
+        setTotalMovies(response.data.meta.count);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, [currentPage]);
+
+  useEffect(() => {
+    const searchMovies = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `https://kitsu.io/api/edge/anime?page[limit]=10&page[offset]=0&filter[text]=${searchTerm}`
+        );
+        setSearchMovies(response.data.data);
+        setTotalMovies(response.data.meta.count);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
+    if (searchTerm !== "") {
+      searchMovies();
+    } else {
+      setSearchMovies([]);
+    }
+  }, [searchTerm]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+    if (value === "") {
+      setSearchMovies([]);
+      setTotalMovies(movies.length);
+    }
+  };
+
+  const renderMovieList = () => {
+    if (searchTerm !== "") {
+      return searchMovies.map((movie) => (
+        <CustomCard key={movie.id} movie={movie} />
+      ));
+    } else {
+      return movies.map((movie) => (
+        <CustomCard key={movie.id} movie={movie} />
+      ));
+    }
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    <div className="global-container">
+      <h1 className="global-title">Lista de Filmes</h1>
+      <Input
+        className="global-input"
+        placeholder="Pesquisar Filme"
+        allowClear
+        onChange={(e) => setSearchTerm(e.target.value)}
+        value={searchTerm}
+      />
+      <ul>
+        {loading ? (
+          <div className="loader">
+            <Spin size="large" />
+          </div>
+        ) : (
+          <div className="center-items cards-container">
+            {renderMovieList()}
+          </div>
+        )}
+      </ul>
+      <Pagination
+        className="pagination"
+        current={currentPage}
+        pageSize={10}
+        total={totalMovies}
+        onChange={handlePageChange}
+      />
+    </div>
+  );
 }
